@@ -8,6 +8,7 @@
 
 import numpy as np
 import os
+import csv as c
 
 def recuperation_donnees (csv_file):
 	"""
@@ -34,6 +35,7 @@ def files_recuperation(folder_name, skyId):
 		data_name.append(folder_name + '/Training_' + name + '.csv')		
 	return data_name
 
+
 def carre(data):
 	"""
 	Fonction permettant de sélectionner un carré de 1680x1680 proche d'un halo et loin. 
@@ -42,22 +44,60 @@ def carre(data):
 	:Args data
 	:Return carre_loin, carre_proche
 	"""
-	carre_proche = []
-	carre_loin = []
-	GalaxyID, x, y, e1, e2 = data[:,0], data[:,1], data[:,2], data[:,3], data[:,4]
-	for galaxy in GalaxyID:
-		if (data[:,4]-840 <= x) and (data[:,4]+840 >= x) and (data[:,5]-840 <= y) and (data[:,5]+840 > y):
-			carre_proche.append([GalaxyID, x , y, e1, e2])
-		
-		elif (x >= data[:,4]*2) and (x < data[:,4]*2 > x) and (data[:,5]*2 < y) and (data[:,5]+840 > y):
-			carre_loin.append([GalaxyID, x, y, e1, e2])
+
+	carre_proche = {}
+	carre_loin = {}
+	for file_name in data:
+		file = np.loadtxt(file_name, dtype=np.str, delimiter=',', skiprows=1)
+		GalaxyID, x, y, e1, e2 = file[:,0],file[:,1], file[:,2], file[:,3], file[:,4]
+		for i in range(len(GalaxyID)):
+			if (float(e1[i])-840 <= float(x[i])) and (float(e1[i])+840 >= float(x[i])) and (float(e2[i])-840 <= float(y[i])) and (float(e2[i])+840 > float(y[i])):
+				if file_name not in carre_proche:
+					carre_proche[file_name] = [GalaxyID[i], e1[i], e2[i]]
+				else:
+					carre_proche[file_name] = carre_proche[file_name] + [GalaxyID[i], e1[i], e2[i]]
+			elif (float(x[i]) >= float(e1[i])*2) and (float(x[i]) < float(e1[i])*2 > float(x[i])) and (float(e2[i])*2 < float(y[i])) and (float(e2[i])+840 > float(y[i])):
+				if file_name not in carre_loin:
+					carre_loin[file_name] = [GalaxyID[i], e1[i], e2[i]]
+				else:
+					carre_loin[file_name] = carre_proche[file_name] + [GalaxyID[i], e1[i], e2[i]]
+	return carre_proche, carre_loin
+
+
+def ellipticite (carre_loin, carre_loin):
+	"""
+	Fonction qui calcul l ellipticite en fonction de e1 et e2 de chaqeu galaxie
+	:Args carre_loin, carre_proche
+	:Return 
+	"""
+	
+
+def prediction ():
+	"""
+	à compléter
+	:Args 
+	:Return 
+	"""
+	Data1 = np.loadtxt('Maximum_likelihood_Benchmark.txt',dtype=np.str,delimiter=',')
+	Data2= np.loadtxt('Training_halos.txt',dtype=np.str,delimiter=',')
+	tab1 = []
+	tab2 = []
+	for i in range(len(Data1)) :
+		diff_x1 = float(Data1[i][1]) - float(Data2[i][2])
+		diff_y1 = float(Data1[i][2]) - float(Data2[i][3])
+		tab1.append(diff_x1)
+		tab2.append(diff_y1)
+	tabx = np.savetxt('DifferenceDesx.txt',tab1)
+	taby = np.savetxt('DifferenceDesy.txt',tab2)
+	return tabx,taby
 
 def main() :
 	"""
         Fonction principale du script python
+	: intégrer prediction 
 	"""
 	skyid = recuperation_donnees('Training_halos.csv')
-	data = files_recuperation('Train_Skies', skyid)
-	carre(data)
-
+	
+	data_files = files_recuperation('Train_Skies', skyid)
+	print carre(data_files)
 main()
