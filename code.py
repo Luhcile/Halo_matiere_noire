@@ -3,7 +3,7 @@
 #                               Halo de matiere noire                                #
 # Autors :  ERARD Thibault, MARIE JOSEPH Bernadette, MONNIER Heloise et VARIN Lucile #
 # Date of creation : 06/11/15                                                        #
-# Date derniere modification : 11/12/15                                              #
+# Date derniere modification : 15/12/15                                              #
 ######################################################################################
 
 import numpy as np
@@ -74,7 +74,9 @@ def ellipticite (carre_loin, carre_loin):
 
 def prediction ():
 	"""
-	à compléter
+	Lit le fichier, compare les deux fichiers ligne par ligne puis fait la différences des deux si il y en a une.
+	Ces données vont être ensuite stocker dans des tableaux qui ont été crées pour ( tab1 et tab2 )
+	créer un tableau qui va stocker les les différences entre les deux fichiers
 	:Args 
 	:Return 
 	"""
