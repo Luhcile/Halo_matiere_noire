@@ -35,7 +35,6 @@ def files_recuperation(folder_name, skyId):
 		data_name.append(folder_name + '/Training_' + name + '.csv')		
 	return data_name
 
-
 def carre(data):
 	"""
 	Fonction permettant de sélectionner un carré de 1680x1680 proche d'un halo et loin. 
